@@ -7,7 +7,7 @@
       ansible.builtin.shell: ls -la
       
     - name: Installing collection
-      ansible.builtin.shell: "ansible-galaxy collection install netapp-ontap-23.3.0.tar.gz"
+      ansible.builtin.shell: "ansible-galaxy collection install netapp-ontap-23.3.0.tar.gz -p /usr/share/ansible/collections/ansible_collections"
   
     - name: verifing
       ansible.builtin.shell: "ansible-galaxy collection list"
