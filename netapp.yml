@@ -11,3 +11,77 @@
   
     - name: verifing
       ansible.builtin.shell: "ansible-galaxy collection list"
+
+---
+- name: SnapMirror Break via ONTAP CLI (AAP)
+  hosts: localhost
+  gather_facts: no
+
+  collections:
+    - netapp.ontap
+
+  vars:
+    netapp_hostname: "{{ netapp_hostname }}"
+    netapp_username: "{{ netapp_username }}"
+    netapp_password: "{{ netapp_password }}"
+
+    destination_svm: "dest_svm"
+    destination_volume: "dest_vol"
+
+  tasks:
+
+    - name: Validate SnapMirror relationship exists
+      netapp.ontap.na_ontap_ssh_command:
+        hostname: "{{ netapp_hostname }}"
+        username: "{{ netapp_username }}"
+        password: "{{ netapp_password }}"
+        command: >
+          snapmirror show
+          -destination-path {{ destination_svm }}:{{ destination_volume }}
+        privilege: admin
+      register: snapmirror_show
+      failed_when: false
+
+    # - name: Display SnapMirror relationship
+    #   debug:
+    #     var: snapmirror_show.stdout
+
+    # - name: Quiesce SnapMirror relationship
+    #   netapp.ontap.na_ontap_ssh_command:
+    #     hostname: "{{ netapp_hostname }}"
+    #     username: "{{ netapp_username }}"
+    #     password: "{{ netapp_password }}"
+    #     command: >
+    #       snapmirror quiesce
+    #       -destination-path {{ destination_svm }}:{{ destination_volume }}
+    #     privilege: admin
+    #   register: snapmirror_quiesce
+    #   failed_when: false
+
+    # - name: Break SnapMirror relationship
+    #   netapp.ontap.na_ontap_ssh_command:
+    #     hostname: "{{ netapp_hostname }}"
+    #     username: "{{ netapp_username }}"
+    #     password: "{{ netapp_password }}"
+    #     command: >
+    #       snapmirror break
+    #       -destination-path {{ destination_svm }}:{{ destination_volume }}
+    #     privilege: admin
+    #   register: snapmirror_break
+
+    # - name: Verify destination volume is writable
+    #   netapp.ontap.na_ontap_ssh_command:
+    #     hostname: "{{ netapp_hostname }}"
+    #     username: "{{ netapp_username }}"
+    #     password: "{{ netapp_password }}"
+    #     command: >
+    #       volume show
+    #       -vserver {{ destination_svm }}
+    #       -volume {{ destination_volume }}
+    #       -fields state,type
+    #     privilege: admin
+    #   register: volume_status
+
+    # - name: Display volume state
+    #   debug:
+    #     var: volume_status.stdout
