@@ -3,8 +3,8 @@
   hosts: localhost
   connection: local
   tasks:
-    - name: ls
-      ansible.builtin.shell: ls -la
+    - name: Get Python dependencies
+      ansible.builtin.shell: pip3 list |grep para
       
     - name: Installing collection
       ansible.builtin.shell: "ansible-galaxy collection install netapp-ontap-23.3.0.tar.gz -p /usr/share/ansible/collections/ansible_collections"
