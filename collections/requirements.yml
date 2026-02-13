@@ -1,0 +1,4 @@
+collections:
+  - name: netapp.ontap
+    source: netapp-ontap-23.3.0.tar.gz
+    type: file # Optional: specify source type
