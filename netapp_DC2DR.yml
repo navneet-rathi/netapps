@@ -1,18 +1,17 @@
 ---
-- name: Installing netapps collection
-  hosts: localhost
-  connection: local
-  gather_facts: no
-  tasks:
-    # - name: Get Python dependencies
-    #   ansible.builtin.shell: pip3 list |grep para
+# - name: Installing netapps collection
+#   hosts: localhost
+#   connection: local
+#   gather_facts: no
+#   tasks:
+#     # - name: Get Python dependencies
+#     #   ansible.builtin.shell: pip3 list |grep para
       
-    # - name: Installing collection
-    #   ansible.builtin.shell: "ansible-galaxy collection install netapp-ontap-23.3.0.tar.gz -p /usr/share/ansible/collections/ansible_collections"
+#     # - name: Installing collection
+#     #   ansible.builtin.shell: "ansible-galaxy collection install netapp-ontap-23.3.0.tar.gz -p /usr/share/ansible/collections/ansible_collections"
   
-    - name: adding to known hosts
-      ansible.builtin.shell: "ssh-keyscan -H {{ inventory_hostname }} >> ~/.ssh/known_hosts"
-  
+#     - name: adding to known hosts
+#       ansible.builtin.shell: "ssh-keyscan -H {{ inventory_hostname }} >> ~/.ssh/known_hosts"
 
 - name: SnapMirror Break via ONTAP CLI (AAP)
   hosts: localhost
