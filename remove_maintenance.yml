@@ -1,0 +1,48 @@
+---
+- name: Remove maintanance page for DC-DR activity
+  hosts:  dr_web:dc_web
+  gather_facts: false
+  become: true
+  become_method: sudo
+  vars:
+    fpath: /doc-root/maintenance_planned.html
+    ihs_home: /ISH9/IBM/HTTPServer
+    ihs_bin: "{{ ihs_home }}/bin/apachectl"
+    ihs_conf: "{{ ihs_home }}/conf/maintenanceA.conf"
+    #ihs_config_file:
+  tasks:
+    - name: Maintanance Page| Apply maitanance page for the activity
+      ansible.builtin.file:
+        path: "{{ fpath }}"
+        owner: root
+        group: root
+        mode: '0000'
+      register: fpath_status
+
+    - name: validate| verifing the status of the file
+      ansible.builtin.debug:
+        msg: "{{ fpath_status.diff }}"
+
+    - name: validate if bin exists
+      ansible.builtin.stat:
+        path: "{{ ihs_bin }}"
+      register: bin_exists
+
+    - name: check bin status
+      ansible.builtin.debug:
+        msg: "{{ bin_exists }}"
+
+    - name: Fail the playbook if the file does not exist
+      ansible.builtin.fail:
+        msg: "Required configuration file is missing: {{ ihs_bin }}"
+      when: not bin_exists.stat.exists
+
+    - name: Start maintanance| Starting the maintanance
+      ansible.builtin.command: >
+        "{{ ihs_bin }}" -f "{{ ihs_conf }}" -k stop
+      register: httpdstatus
+      become_user: wasadmin
+
+    - name: validate the status| validate the status of the apache
+      ansible.builtin.debug:
+        msg: "{{ httpdstatus }}"
