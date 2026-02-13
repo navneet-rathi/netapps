@@ -1,6 +1,6 @@
 ---
 - name: Testing the switch user
-  hosts: all
+  hosts: dc_web:dr_web
   tasks:
     - name: run
       ansible.builtin.shell: "whoami"
