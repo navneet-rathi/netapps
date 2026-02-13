@@ -13,7 +13,7 @@
     - name: verifing
       ansible.builtin.shell: "ansible-galaxy collection list"
 
----
+
 - name: SnapMirror Break via ONTAP CLI (AAP)
   hosts: localhost
   gather_facts: no
