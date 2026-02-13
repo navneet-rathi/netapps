@@ -42,6 +42,15 @@
         privilege: admin
       register: snapmirror_show
       failed_when: false
+      loop: 
+        - snapmirror show -destination-path DR_Training_Testing:Mirror_ScriptTest_vol1_dest -fields state,status
+        - snapmirror update -destination-path DR_Training_Testing:Mirror_ScriptTest_vol1_dest  -source-path Application_UAT:Mirror_ScriptTest_vol1
+        - snapmirror quiesce -destination-path DR_Training_Testing:Mirror_ScriptTest_vol1_dest  -source-path Application_UAT:Mirror_ScriptTest_vol1
+        - snapmirror show -destination-path DR_Training_Testing:Mirror_ScriptTest_vol1_dest -fields state,status
+        - snapmirror break -destination-path DR_Training_Testing:Mirror_ScriptTest_vol1_dest  -source-path Application_UAT:Mirror_ScriptTest_vol1
+        - snapmirror show -destination-path DR_Training_Testing:Mirror_ScriptTest_vol1_dest -fields state,status
+
+      
 
     # - name: Display SnapMirror relationship
     #   debug:
