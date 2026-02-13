@@ -1,0 +1,39 @@
+---
+- name: Installing netapps collection
+  hosts: localhost
+  connection: local
+  gather_facts: no
+  tasks:
+    - name: Get Python dependencies
+      ansible.builtin.shell: pip3 list |grep para
+      
+    - name: Installing collection
+      ansible.builtin.shell: "ansible-galaxy collection install netapp-ontap-23.3.0.tar.gz -p /usr/share/ansible/collections/ansible_collections"
+  
+    - name: verifing
+      ansible.builtin.shell: "ansible-galaxy collection list"
+
+---
+- name: SnapMirror Break via ONTAP CLI (AAP)
+  hosts: localhost
+  gather_facts: no
+
+  collections:
+    - netapp.ontap
+
+  vars:
+    netapp_hostname: "{{ netapp_hostname }}"
+    netapp_username: "{{ netapp_username }}"
+    netapp_password: "{{ netapp_password }}"
+
+    destination_svm: "dest_svm"
+    destination_volume: "dest_vol"
+
+  tasks:
+    - name: loop | running commands in a loop
+      ansible.builtin.shell: echo "{{ item }}"
+      loop:
+        - 1
+        - 2
+        - 3
+    
