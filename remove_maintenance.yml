@@ -1,6 +1,6 @@
 ---
 - name: Remove maintanance page for DC-DR activity
-  hosts:  dr_web:dc_web
+  hosts: dr_web:dc_web
   gather_facts: false
   become: true
   become_method: sudo
