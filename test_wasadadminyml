@@ -1,0 +1,10 @@
+---
+- name: Testing the switch user
+  hosts: all
+  tasks:
+    - name: run
+      ansible.builtin.shell: "whoami"
+
+    - name: run
+      ansible.builtin.shell: whoami
+      become_user: wasadmin
