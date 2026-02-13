@@ -30,68 +30,60 @@
     destination_volume: "dest_vol"
 
   tasks:
-
-    - name: Validate SnapMirror relationship exists
+    - name: Testing job Actual Job is commented as we are testing
       netapp.ontap.na_ontap_ssh_command:
         hostname: "{{ netapp_hostname }}"
         username: "{{ netapp_username }}"
         password: "{{ netapp_password }}"
         command: >
-          snapmirror show
-          -destination-path {{ destination_svm }}:{{ destination_volume }}
+          "{{ item }}"
+          # snapmirror show
+          # -destination-path {{ destination_svm }}:{{ destination_volume }}
         privilege: admin
       register: snapmirror_show
       failed_when: false
       loop: 
         - snapmirror show -destination-path DR_Training_Testing:Mirror_ScriptTest_vol1_dest -fields state,status
-        - snapmirror update -destination-path DR_Training_Testing:Mirror_ScriptTest_vol1_dest  -source-path Application_UAT:Mirror_ScriptTest_vol1
-        - snapmirror quiesce -destination-path DR_Training_Testing:Mirror_ScriptTest_vol1_dest  -source-path Application_UAT:Mirror_ScriptTest_vol1
-        - snapmirror show -destination-path DR_Training_Testing:Mirror_ScriptTest_vol1_dest -fields state,status
-        - snapmirror break -destination-path DR_Training_Testing:Mirror_ScriptTest_vol1_dest  -source-path Application_UAT:Mirror_ScriptTest_vol1
-        - snapmirror show -destination-path DR_Training_Testing:Mirror_ScriptTest_vol1_dest -fields state,status
-
-      
-
-    # - name: Display SnapMirror relationship
-    #   debug:
-    #     var: snapmirror_show.stdout
-
-    # - name: Quiesce SnapMirror relationship
+        - snapmirror show -destination-path  Application_UAT:Mirror_ScriptTest_vol2 -fields state,status
+    
+    # - name: Validate SnapMirror relationship exists
     #   netapp.ontap.na_ontap_ssh_command:
     #     hostname: "{{ netapp_hostname }}"
     #     username: "{{ netapp_username }}"
     #     password: "{{ netapp_password }}"
     #     command: >
-    #       snapmirror quiesce
-    #       -destination-path {{ destination_svm }}:{{ destination_volume }}
+    #       "{{ item }}"
+    #       # snapmirror show
+    #       # -destination-path {{ destination_svm }}:{{ destination_volume }}
     #     privilege: admin
-    #   register: snapmirror_quiesce
+    #   register: snapmirror_show
     #   failed_when: false
-
-    # - name: Break SnapMirror relationship
+    #   loop: 
+    #     - snapmirror show -destination-path DR_Training_Testing:Mirror_ScriptTest_vol1_dest -fields state,status
+    #     - snapmirror update -destination-path DR_Training_Testing:Mirror_ScriptTest_vol1_dest  -source-path Application_UAT:Mirror_ScriptTest_vol1
+    #     - snapmirror quiesce -destination-path DR_Training_Testing:Mirror_ScriptTest_vol1_dest  -source-path Application_UAT:Mirror_ScriptTest_vol1
+    #     - snapmirror show -destination-path DR_Training_Testing:Mirror_ScriptTest_vol1_dest -fields state,status
+    #     - snapmirror break -destination-path DR_Training_Testing:Mirror_ScriptTest_vol1_dest  -source-path Application_UAT:Mirror_ScriptTest_vol1
+    #     - snapmirror show -destination-path DR_Training_Testing:Mirror_ScriptTest_vol1_dest -fields state,status
+        
+    # - name:  SnapMirror relationship Operations
     #   netapp.ontap.na_ontap_ssh_command:
     #     hostname: "{{ netapp_hostname }}"
     #     username: "{{ netapp_username }}"
     #     password: "{{ netapp_password }}"
     #     command: >
-    #       snapmirror break
-    #       -destination-path {{ destination_svm }}:{{ destination_volume }}
+    #       "{{ item }}"
+    #       # snapmirror show
+    #       # -destination-path {{ destination_svm }}:{{ destination_volume }}
     #     privilege: admin
-    #   register: snapmirror_break
+    #   register: snapmirror_show
+    #   failed_when: false
+    #   loop: 
+    #     - snapmirror show -destination-path  Application_UAT:Mirror_ScriptTest_vol2 -fields state,status
+    #     - snapmirror update -destination-path  Application_UAT:Mirror_ScriptTest_vol2  -source-path DR_Training_Testing:Mirror_ScriptTest_vol2_dest
+    #     - snapmirror quiesce -destination-path Application_UAT:Mirror_ScriptTest_vol2   -source-path DR_Training_Testing:Mirror_ScriptTest_vol2_dest
+    #     - snapmirror show -destination-path Application_UAT:Mirror_ScriptTest_vol2  -fields state,status
+    #     - snapmirror break -destination-path Application_UAT:Mirror_ScriptTest_vol2   -source-path DR_Training_Testing:Mirror_ScriptTest_vol2_dest
+    #     - snapmirror show -destination-pathApplication_UAT:Mirror_ScriptTest_vol2  -fields state,status
 
-    # - name: Verify destination volume is writable
-    #   netapp.ontap.na_ontap_ssh_command:
-    #     hostname: "{{ netapp_hostname }}"
-    #     username: "{{ netapp_username }}"
-    #     password: "{{ netapp_password }}"
-    #     command: >
-    #       volume show
-    #       -vserver {{ destination_svm }}
-    #       -volume {{ destination_volume }}
-    #       -fields state,type
-    #     privilege: admin
-    #   register: volume_status
 
-    # - name: Display volume state
-    #   debug:
-    #     var: volume_status.stdout
