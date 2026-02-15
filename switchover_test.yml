@@ -2,7 +2,7 @@
 - name: Oracle GoldenGate Switchover on Solaris
   hosts: all
   become: yes
-  become_user: "{{ oracle_user }}"
+ # become_user: "{{ oracle_user }}"
   gather_facts: no
   environment: "{{ ogg_env }}"
   tasks:
