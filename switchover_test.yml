@@ -1,0 +1,70 @@
+---
+- name: Oracle GoldenGate Switchover on Solaris
+  hosts: ogg
+  become: yes
+  become_user: "{{ oracle_user }}"
+  gather_facts: no
+  environment: "{{ ogg_env }}"
+  tasks:
+    - name: Testing the remote server environment
+      ansible.builtin.shell: env
+      register: environment_vars
+
+    - ansible.builtin.debug:
+        msg: "{{ environment_vars }}"
+    # - name: Stop Extract on Source Database
+    #   shell: |
+    #     cd {{ ogg_home }}
+    #     ./ggsci <<EOF
+    #     STOP EXTRACT {{ extract_name }}
+    #     INFO EXTRACT {{ extract_name }}
+    #     EXIT
+    #     EOF
+    #   when: "'source_db' in group_names"
+    #   register: stop_extract
+
+    # - name: Wait for Replicat to catch up on Target
+    #   shell: |
+    #     cd {{ ogg_home }}
+    #     ./ggsci <<EOF
+    #     LAG REPLICAT {{ replicat_name }}
+    #     EXIT
+    #     EOF
+    #   when: "'target_db' in group_names"
+    #   register: replicat_lag
+    #   retries: 10
+    #   delay: 30
+    #   until: "'00:00:00' in replicat_lag.stdout"
+
+    # - name: Stop Replicat on Target
+    #   shell: |
+    #     cd {{ ogg_home }}
+    #     ./ggsci <<EOF
+    #     STOP REPLICAT {{ replicat_name }}
+    #     INFO REPLICAT {{ replicat_name }}
+    #     EXIT
+    #     EOF
+    #   when: "'target_db' in group_names"
+    #   register: stop_replicat
+
+    # - name: Start Extract on Target (New Primary)
+    #   shell: |
+    #     cd {{ ogg_home }}
+    #     ./ggsci <<EOF
+    #     START EXTRACT {{ extract_name }}
+    #     INFO EXTRACT {{ extract_name }}
+    #     EXIT
+    #     EOF
+    #   when: "'target_db' in group_names"
+    #   register: start_extract_target
+
+    # - name: Start Replicat on Source (Reverse Replication)
+    #   shell: |
+    #     cd {{ ogg_home }}
+    #     ./ggsci <<EOF
+    #     START REPLICAT {{ replicat_name }}
+    #     INFO REPLICAT {{ replicat_name }}
+    #     EXIT
+    #     EOF
+    #   when: "'source_db' in group_names"
+    #   register: start_replicat_source
