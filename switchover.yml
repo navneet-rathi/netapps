@@ -5,7 +5,16 @@
   become_user: "{{ oracle_user }}"
   gather_facts: no
   environment: "{{ ogg_env }}"
+  
   tasks:
+    - name: verify Ready for switchover on primary
+      ansible.builtin.shell: |
+        . ./.bash_profile && sqlplus -S / as sysdba <<EOF
+        ALTER DATABASE SWICHOVER TO RETUATDG Verify;
+        EXIT;
+        EOF
+      when: "'dc_db' in group_names"
+      
     - name: Stop Extract on Source Database
       shell: |
         cd {{ ogg_home }}
@@ -16,8 +25,7 @@
         EOF
       args:
         chdir: "{{ ogg_home }}"  
-      when: "'dc_db' in group_names"
-      
+      when: "'dc_db' in group_names"      
       register: stop_extract
 
     - name: Wait for Replicat to catch up on Target
@@ -29,10 +37,10 @@
         EOF
       args:
         chdir: "{{ ogg_home }}"        
-      when: "'dr_db' in group_names"
+      when: "'dc_db' in group_names"
       register: replicat_lag
       retries: 10
-      delay: 30
+      delay: 5
       until: "'00:00:00' in replicat_lag.stdout"
 
     - name: Stop Replicat on Target
@@ -45,47 +53,55 @@
         EOF
       args:
         chdir: "{{ ogg_home }}"        
-      when: "'dr_db' in group_names"
+      when: "'dc_db' in group_names"
       register: stop_replicat
       
     - name: Perform switchover on primary
       ansible.builtin.shell: |
-        source {{ oracle_home }}/.bashrc && sqlplus -S / as sysdba <<EOF
-        ALTER DATABASE COMMIT TO SWITCHOVER TO STANDBY;
+        cd {{ oracle_home }}/.bash_profile && sqlplus -S / as sysdba <<EOF
+        ALTER DATABASE SWICHOVER TO RETUATDG;
         EXIT;
         EOF
-      when: "'dc_db' in group_names"      
-      
-    - name: Perform switchover on primary
-      ansible.builtin.shell: |
-        source {{ ORACLE_HOME }}/.bashrc && sqlplus -S / as sysdba <<EOF
-        ALTER DATABASE COMMIT TO SWITCHOVER TO STANDBY;
-        EXIT;
-        EOF
-      when: "'dc_db' in group_names"     
-
-    - name: Start Extract on Target (New Primary)
-      shell: |
-        cd {{ ogg_home }}
-        ./ggsci <<EOF
-        START EXTRACT {{ extract_name }}
-        INFO EXTRACT {{ extract_name }}
-        EXIT
-        EOF
-      args:
-        chdir: "{{ ogg_home }}"        
-      when: "'dr_db' in group_names"
-      register: start_extract_target
-
-    - name: Start Replicat on Source (Reverse Replication)
-      shell: |
-        cd {{ ogg_home }}
-        ./ggsci <<EOF
-        START REPLICAT {{ replicat_name }}
-        INFO REPLICAT {{ replicat_name }}
-        EXIT
-        EOF
-      args:
-        chdir: "{{ ogg_home }}"        
       when: "'dc_db' in group_names"
-      register: start_replicat_source
+
+    - name: Open New primary in RW | Need to execute on ALL hosts in Standby
+      ansible.builtin.shell: |
+        cd {{ oracle_home }}/.bash_profile && sqlplus -S / as sysdba <<EOF
+        ALTER DATABASE OPEN;
+        EXIT;
+        EOF
+      when: "'dr_db' in group_names"
+
+    - name: Verify Openmode and database_role #
+      ansible.builtin.shell: |
+        cd {{ oracle_home }}/.bash_profile && sqlplus -S / as sysdba <<EOF
+        SELECT NAME,Instance_Name,DATABASE_ROLE,OPEN_MODE FROM v$Database,GV$Instance;
+        EXIT;
+        EOF
+      when: "'dr_db' in group_names"      
+      
+    # - name: Start Extract on Target (New Primary)
+    #   shell: |
+    #     cd {{ ogg_home }}
+    #     ./ggsci <<EOF
+    #     START EXTRACT {{ extract_name }}
+    #     INFO EXTRACT {{ extract_name }}
+    #     EXIT
+    #     EOF
+    #   args:
+    #     chdir: "{{ ogg_home }}"        
+    #   when: "'dr_db' in group_names"
+    #   register: start_extract_target
+
+    # - name: Start Replicat on Source (Reverse Replication)
+    #   shell: |
+    #     cd {{ ogg_home }}
+    #     ./ggsci <<EOF
+    #     START REPLICAT {{ replicat_name }}
+    #     INFO REPLICAT {{ replicat_name }}
+    #     EXIT
+    #     EOF
+    #   args:
+    #     chdir: "{{ ogg_home }}"        
+    #   when: "'dc_db' in group_names"
+    #   register: start_replicat_source
