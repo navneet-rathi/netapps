@@ -14,7 +14,7 @@
         INFO EXTRACT {{ extract_name }}
         EXIT
         EOF
-      when: "'source_db' in group_names"
+      when: "'dc_db' in group_names"
       register: stop_extract
 
     - name: Wait for Replicat to catch up on Target
@@ -24,7 +24,7 @@
         LAG REPLICAT {{ replicat_name }}
         EXIT
         EOF
-      when: "'target_db' in group_names"
+      when: "'dr_db' in group_names"
       register: replicat_lag
       retries: 10
       delay: 30
@@ -38,7 +38,7 @@
         INFO REPLICAT {{ replicat_name }}
         EXIT
         EOF
-      when: "'target_db' in group_names"
+      when: "'dr_db' in group_names"
       register: stop_replicat
 
     - name: Start Extract on Target (New Primary)
@@ -49,7 +49,7 @@
         INFO EXTRACT {{ extract_name }}
         EXIT
         EOF
-      when: "'target_db' in group_names"
+      when: "'dr_db' in group_names"
       register: start_extract_target
 
     - name: Start Replicat on Source (Reverse Replication)
@@ -60,5 +60,5 @@
         INFO REPLICAT {{ replicat_name }}
         EXIT
         EOF
-      when: "'source_db' in group_names"
+      when: "'dc_db' in group_names"
       register: start_replicat_source
