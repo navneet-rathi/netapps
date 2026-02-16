@@ -16,6 +16,16 @@
         EOF
 #      when: "'dc_db_1' in group_names"
       when: inventory_hostname == "dc_db_1"
+      
+    - name: Job Queue process to 0 | No more schedular jobs will RUN on DB
+      ansible.builtin.shell: |
+        . ~/.bash_profile && sqlplus -S / as sysdba <<EOF
+        ALTER DATABASE SWICHOVER TO RETUATDG Verify;
+        EXIT;
+        EOF
+#      when: "'dc_db_1' in group_names"
+      when: inventory_hostname == "dc_db_1"
+      	      
       	
     - name: Stop Extract on Source Database
       shell: |
