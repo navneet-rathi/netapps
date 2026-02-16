@@ -8,6 +8,8 @@
     netapp_hostname: "{{ netapp_hostname }}"
     netapp_username: "{{ netapp_username }}"
     netapp_password: "{{ netapp_password }}"
+    destination_svm: "dest_svm"
+    destination_volume: "dest_vol"
   tasks:
     - name: Testing job Actual Job is commented as we are testing
       netapp.ontap.na_ontap_ssh_command:
