@@ -44,7 +44,7 @@
         chdir: "{{ ogg_home }}"        
       when: inventory_hostname == "dc_db_1"
       register: replicat_lag
-      retries: 10
+      retries: 3
       delay: 5
       until: "'00:00:00' in replicat_lag.stdout"
 
