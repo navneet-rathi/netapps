@@ -122,5 +122,3 @@
         EOF
       #      when: "'dc_db_1' in group_names"
       when: inventory_hostname == "dc_db_1"
-
-      
