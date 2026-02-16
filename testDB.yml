@@ -16,7 +16,7 @@
         EOF
       when: "'dc_db' in group_names"
       
-      - name: Stop Extract on Source Database
+    - name: Stop Extract on Source Database
       shell: |
         cd {{ ogg_home }}
         ./ggsci <<EOF
