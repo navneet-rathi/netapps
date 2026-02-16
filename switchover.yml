@@ -79,6 +79,14 @@
         EXIT;
         EOF
       when: "'dr_db' in group_names"      
+
+    - name:  Start MRP
+      ansible.builtin.shell: |
+        cd {{ oracle_home }}/.bash_profile && sqlplus -S / as sysdba <<EOF
+        ALTER DATABASE RECOVER MANAGED STANDBY DATABASE DISCONNECT FROM SESSION;
+        EXIT;
+        EOF
+      when: "'dc_db' in group_names"    
       
     # - name: Start Extract on Target (New Primary)
     #   shell: |
