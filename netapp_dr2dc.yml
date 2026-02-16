@@ -1,19 +1,4 @@
 ---
-# - name: Installing netapps collection
-#   hosts: localhost
-#   connection: local
-#   gather_facts: no
-#   tasks:
-#     - name: Get Python dependencies
-#       ansible.builtin.shell: pip3 list |grep para
-      
-#     - name: Installing collection
-#       ansible.builtin.shell: "ansible-galaxy collection install netapp-ontap-23.3.0.tar.gz -p /usr/share/ansible/collections/ansible_collections"
-  
-#     - name: verifing
-#       ansible.builtin.shell: "ansible-galaxy collection list"
-
-
 - name: SnapMirror Break via ONTAP CLI (AAP)
   hosts: localhost
   gather_facts: no
@@ -40,8 +25,8 @@
       register: snapmirror_show
       failed_when: false
       loop: 
-        - "snapmirror show\ -destination-path Application_UAT:Mirror_ScriptTest_vol1\ -fields state,status"
-        - "snapmirror show\ -destination-path Application_UAT:Mirror_ScriptTest_vol2\ -fields state,status"
+        - snapmirror show -destination-path Application_UAT:Mirror_ScriptTest_vol1 -fields state,status
+        - snapmirror show -destination-path Application_UAT:Mirror_ScriptTest_vol2 -fields state,status
     
     # - name: Validate SnapMirror relationship exists
     #   netapp.ontap.na_ontap_ssh_command:
