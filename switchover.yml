@@ -14,7 +14,10 @@
         INFO EXTRACT {{ extract_name }}
         EXIT
         EOF
+      args:
+        chdir: "{{ ogg_home }}"  
       when: "'dc_db' in group_names"
+      
       register: stop_extract
 
     - name: Wait for Replicat to catch up on Target
@@ -24,6 +27,8 @@
         LAG REPLICAT {{ replicat_name }}
         EXIT
         EOF
+      args:
+        chdir: "{{ ogg_home }}"        
       when: "'dr_db' in group_names"
       register: replicat_lag
       retries: 10
@@ -38,6 +43,8 @@
         INFO REPLICAT {{ replicat_name }}
         EXIT
         EOF
+      args:
+        chdir: "{{ ogg_home }}"        
       when: "'dr_db' in group_names"
       register: stop_replicat
 
@@ -49,6 +56,8 @@
         INFO EXTRACT {{ extract_name }}
         EXIT
         EOF
+      args:
+        chdir: "{{ ogg_home }}"        
       when: "'dr_db' in group_names"
       register: start_extract_target
 
@@ -60,5 +69,7 @@
         INFO REPLICAT {{ replicat_name }}
         EXIT
         EOF
+      args:
+        chdir: "{{ ogg_home }}"        
       when: "'dc_db' in group_names"
       register: start_replicat_source
