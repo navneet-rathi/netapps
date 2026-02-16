@@ -47,6 +47,14 @@
         chdir: "{{ ogg_home }}"        
       when: "'dr_db' in group_names"
       register: stop_replicat
+      
+    - name: Perform switchover on primary
+      ansible.builtin.shell: |
+        source {{ ORACLE_HOME }}/.bashrc && sqlplus -S / as sysdba <<EOF
+        ALTER DATABASE COMMIT TO SWITCHOVER TO STANDBY;
+        EXIT;
+        EOF
+      when: "'dc_db' in group_names"     
 
     - name: Start Extract on Target (New Primary)
       shell: |
