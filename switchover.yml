@@ -110,7 +110,8 @@
       ansible.builtin.shell: |
         . ~/.bash_profile &&
         srvctl start database -d RETUAT -o 'read only'
-      when: "'dr_db_1' in group_names"
+      # when: "'dc_db_1' in group_names"
+      when: inventory_hostname == "dc_db_1"
       
     - name:  Start MRP 
       ansible.builtin.shell: |
@@ -119,32 +120,7 @@
         ALTER DATABASE RECOVER MANAGED STANDBY DATABASE DISCONNECT FROM SESSION;
         EXIT;
         EOF
-      when: "'dc_db_1' in group_names"    
-
+      #      when: "'dc_db_1' in group_names"
+      when: inventory_hostname == "dc_db_1"
 
       
-    # - name: Start Extract on Target (New Primary)
-    #   shell: |
-    #     cd {{ ogg_home }}
-    #     ./ggsci <<EOF
-    #     START EXTRACT {{ extract_name }}
-    #     INFO EXTRACT {{ extract_name }}
-    #     EXIT
-    #     EOF
-    #   args:
-    #     chdir: "{{ ogg_home }}"        
-    #   when: "'dr_db' in group_names"
-    #   register: start_extract_target
-
-    # - name: Start Replicat on Source (Reverse Replication)
-    #   shell: |
-    #     cd {{ ogg_home }}
-    #     ./ggsci <<EOF
-    #     START REPLICAT {{ replicat_name }}
-    #     INFO REPLICAT {{ replicat_name }}
-    #     EXIT
-    #     EOF
-    #   args:
-    #     chdir: "{{ ogg_home }}"        
-    #   when: "'dc_db' in group_names"
-    #   register: start_replicat_source
