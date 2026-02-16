@@ -17,8 +17,6 @@
         accept_unknown_host_keys: true
         command: >
           "{{ item }}"
-          # snapmirror show
-          # -destination-path {{ destination_svm }}:{{ destination_volume }}
         privilege: admin
       register: snapmirror_show
       failed_when: false
