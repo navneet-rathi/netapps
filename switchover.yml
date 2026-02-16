@@ -27,7 +27,8 @@
         chdir: "{{ ogg_home }}"  
       when: "'dc_db' in group_names"      
       register: stop_extract
-
+      
+      
     - name: Wait for Replicat to catch up on Target
       shell: |
         cd {{ ogg_home }}
@@ -56,6 +57,18 @@
       when: "'dc_db' in group_names"
       register: stop_replicat
       
+    - name: Stop manager on Source Database
+      shell: |
+        cd {{ ogg_home }}
+        ./ggsci <<EOF
+        STOP mgr!
+        EXIT
+        EOF
+      args:
+        chdir: "{{ ogg_home }}"  
+      when: "'dc_db' in group_names"
+      register: stop_mgr
+      
     - name: Perform switchover on primary
       ansible.builtin.shell: |
         cd {{ oracle_home }}/.bash_profile && sqlplus -S / as sysdba <<EOF
@@ -71,22 +84,30 @@
         EXIT;
         EOF
       when: "'dr_db' in group_names"
-
+      
+     ### primary and openmode read write
     - name: Verify Openmode and database_role #
       ansible.builtin.shell: |
         cd {{ oracle_home }}/.bash_profile && sqlplus -S / as sysdba <<EOF
         SELECT NAME,Instance_Name,DATABASE_ROLE,OPEN_MODE FROM v$Database,GV$Instance;
         EXIT;
         EOF
-      when: "'dr_db' in group_names"      
-
-    - name:  Start MRP
+      when: "'dr_db' in group_names"    
+      
+    - name: Open New Standby In Readonly Mode 
+      ansible.builtin.shell: |
+        srvctl start database -d RETUAT -o 'read only'
+      when: "'dr_db' in group_names"
+      
+    - name:  Start MRP 
       ansible.builtin.shell: |
         cd {{ oracle_home }}/.bash_profile && sqlplus -S / as sysdba <<EOF
         ALTER DATABASE RECOVER MANAGED STANDBY DATABASE DISCONNECT FROM SESSION;
         EXIT;
         EOF
       when: "'dc_db' in group_names"    
+
+
       
     # - name: Start Extract on Target (New Primary)
     #   shell: |
