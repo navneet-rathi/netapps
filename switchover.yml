@@ -1,5 +1,5 @@
 ---
-- name: Oracle GoldenGate Switchover on Solaris
+- name: Oracle database and GoldenGate Switchover on Solaris
   hosts: dr_web:dc_web
   become: yes
   become_user: "{{ oracle_user }}"
