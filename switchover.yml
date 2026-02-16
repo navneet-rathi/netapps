@@ -9,7 +9,7 @@
   tasks:
     - name: verify Ready for switchover on primary
       ansible.builtin.shell: |
-        . ./.bash_profile && sqlplus -S / as sysdba <<EOF
+        . ~/.bash_profile && sqlplus -S / as sysdba <<EOF
         ALTER DATABASE SWICHOVER TO RETUATDG Verify;
         EXIT;
         EOF
@@ -17,6 +17,7 @@
       
     - name: Stop Extract on Source Database
       shell: |
+        . ~/.bash_profile
         cd {{ ogg_home }}
         ./ggsci <<EOF
         STOP EXTRACT {{ extract_name }}
@@ -31,6 +32,7 @@
       
     - name: Wait for Replicat to catch up on Target
       shell: |
+        . ~/.bash_profile
         cd {{ ogg_home }}
         ./ggsci <<EOF
         LAG REPLICAT {{ replicat_name }}
@@ -46,6 +48,7 @@
 
     - name: Stop Replicat on Target
       shell: |
+        . ~/.bash_profile      
         cd {{ ogg_home }}
         ./ggsci <<EOF
         STOP REPLICAT {{ replicat_name }}
@@ -59,6 +62,7 @@
       
     - name: Stop manager on Source Database
       shell: |
+        . ~/.bash_profile
         cd {{ ogg_home }}
         ./ggsci <<EOF
         STOP mgr!
@@ -71,6 +75,7 @@
       
     - name: Perform switchover on primary
       ansible.builtin.shell: |
+        . ~/.bash_profile
         cd {{ oracle_home }}/.bash_profile && sqlplus -S / as sysdba <<EOF
         ALTER DATABASE SWICHOVER TO RETUATDG;
         EXIT;
@@ -79,6 +84,7 @@
 
     - name: Open New primary in RW | Need to execute on ALL hosts in Standby
       ansible.builtin.shell: |
+        . ~/.bash_profile
         cd {{ oracle_home }}/.bash_profile && sqlplus -S / as sysdba <<EOF
         ALTER DATABASE OPEN;
         EXIT;
@@ -88,6 +94,7 @@
      ### primary and openmode read write
     - name: Verify Openmode and database_role #
       ansible.builtin.shell: |
+        . ~/.bash_profile
         cd {{ oracle_home }}/.bash_profile && sqlplus -S / as sysdba <<EOF
         SELECT NAME,Instance_Name,DATABASE_ROLE,OPEN_MODE FROM v$Database,GV$Instance;
         EXIT;
@@ -96,11 +103,13 @@
       
     - name: Open New Standby In Readonly Mode 
       ansible.builtin.shell: |
+        . ~/.bash_profile &&
         srvctl start database -d RETUAT -o 'read only'
       when: "'dr_db' in group_names"
       
     - name:  Start MRP 
       ansible.builtin.shell: |
+        . ~/.bash_profile
         cd {{ oracle_home }}/.bash_profile && sqlplus -S / as sysdba <<EOF
         ALTER DATABASE RECOVER MANAGED STANDBY DATABASE DISCONNECT FROM SESSION;
         EXIT;
