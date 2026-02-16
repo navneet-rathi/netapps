@@ -50,6 +50,14 @@
       
     - name: Perform switchover on primary
       ansible.builtin.shell: |
+        source {{ oracle_home }}/.bashrc && sqlplus -S / as sysdba <<EOF
+        ALTER DATABASE COMMIT TO SWITCHOVER TO STANDBY;
+        EXIT;
+        EOF
+      when: "'dc_db' in group_names"      
+      
+    - name: Perform switchover on primary
+      ansible.builtin.shell: |
         source {{ ORACLE_HOME }}/.bashrc && sqlplus -S / as sysdba <<EOF
         ALTER DATABASE COMMIT TO SWITCHOVER TO STANDBY;
         EXIT;
