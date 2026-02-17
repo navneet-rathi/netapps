@@ -11,10 +11,10 @@
     - name: Testing the remote server environment
       ansible.builtin.shell: env
       register: environment_vars
-      when: inventory_hostname == "dc_db_1"
+      when: inventory_hostname == "test.server.local]"
 
 
     - ansible.builtin.debug:
         msg: "{{ environment_vars }}"
-      when: inventory_hostname == "dc_db_1"
+      when: inventory_hostname == "test.server.local]"
 
