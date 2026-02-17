@@ -18,3 +18,9 @@
         msg: "{{ environment_vars }}"
       when: inventory_hostname == "test.server.local"
 
+
+    - name: Open New primary in RW | Need to execute on ALL hosts in Standby
+      ansible.builtin.shell: |
+        ifconfig
+        hostname
+      when: "'dr_db' in group_names"
