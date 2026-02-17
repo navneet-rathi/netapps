@@ -2,3 +2,6 @@ collections:
   - name: netapp.ontap
     source: netapp-ontap-23.3.0.tar.gz
     type: file # Optional: specify source type
+  - name: ansible.posix
+    source: ansible-posix-2.1.0.tar.gz
+    type: file
