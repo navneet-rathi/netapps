@@ -23,4 +23,4 @@
       ansible.builtin.shell: |
         ifconfig
         hostname
-      when: "'dr_db' in group_names"
+      when: "'dr_web' in group_names"
