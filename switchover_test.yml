@@ -4,7 +4,8 @@
   become: yes
  # become_user: "{{ oracle_user }}"
   gather_facts: no
-  vars_file: oracle_gp_vars.yml
+  vars_files:
+    - oracle_gp_vars.yml  
   environment: "{{ ogg_env }}"
   tasks:
     - name: Testing the remote server environment
