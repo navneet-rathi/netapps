@@ -25,7 +25,7 @@
         EOF
 #      when: "'dc_db_1' in group_names"
       when: inventory_hostname == "dc_db_1"
-      	          	
+      
     - name: Stop Extract on Source Database
       shell: |
         . ~/.bash_profile
@@ -114,11 +114,11 @@
         SELECT NAME,Instance_Name,DATABASE_ROLE,OPEN_MODE FROM v$Database,V$Instance;
         EXIT;
         EOF
-     register: Verify_Openmode  
-     when: 
-       -  inventory_hostname == "dr_db_1" or inventory_hostname == "dr_db_2"
-       -  "'READ WRITE' in Verify_Openmode.stdout" 
-       -  "'PRIMARY' in Verify_Openmode.stdout"
+      register: Verify_Openmode  
+      when: 
+        -  inventory_hostname == "dr_db_1" or inventory_hostname == "dr_db_2"
+        -  "'READ WRITE' in Verify_Openmode.stdout" 
+        -  "'PRIMARY' in Verify_Openmode.stdout"
        
     - name: Open New Standby In Readonly Mode 
       ansible.builtin.shell: |
