@@ -11,7 +11,7 @@
     extract_name: "ext_{{ inventory_hostname }}"
     replicat_name: "rep_{{ inventory_hostname }}"
   tasks:
-    - name: verify Ready for switchover on primary
+    - name: sw1 | verify Ready for switchover on primary
       ansible.builtin.shell: |
         . ~/.bash_profile && sqlplus -S / as sysdba <<EOF
         ALTER DATABASE SWICHOVER TO RETUATDG Verify;
@@ -20,7 +20,7 @@
 #      when: "'dc_db_1' in group_names"
       when: inventory_hostname == "dc_db_1"
       
-    - name: Job Queue process to 0 | No more schedular jobs will RUN on DB
+    - name: sw1 | Job Queue process to 0 | No more schedular jobs will RUN on DB
       ansible.builtin.shell: |
         . ~/.bash_profile && sqlplus -S / as sysdba <<EOF
         ALTER SYSTEM SET JOB_QUEUE_PROCESSES=0 SID='*';

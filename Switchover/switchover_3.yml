@@ -11,7 +11,7 @@
     extract_name: "ext_{{ inventory_hostname }}"
     replicat_name: "rep_{{ inventory_hostname }}"
   tasks:
-    - name: Stop manager on Source Database
+    - name: sw3 |Stop manager on Source Database
       shell: |
         . ~/.bash_profile
         cd {{ ogg_home }}
@@ -25,7 +25,7 @@
       when: inventory_hostname == "dc_db_1"
       register: stop_mgr
       
-    - name: Perform switchover on primary
+    - name: sw3 |Perform switchover on primary
       ansible.builtin.shell: |
         . ~/.bash_profile
         cd {{ oracle_home }}/.bash_profile && sqlplus -S / as sysdba <<EOF

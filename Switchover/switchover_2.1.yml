@@ -11,7 +11,7 @@
     extract_name: "ext_{{ inventory_hostname }}"
     replicat_name: "rep_{{ inventory_hostname }}"
   tasks:      
-    - name: Stop Extract on Source Database
+    - name: sw2 |Stop Extract on Source Database
       shell: |
         . ~/.bash_profile
         cd {{ ogg_home }}
@@ -26,7 +26,7 @@
       register: stop_extract
       
       
-    - name: Wait for Replicat to catch up on Target
+    - name: sw2 |Wait for Replicat to catch up on Target
       shell: |
         . ~/.bash_profile
         cd {{ ogg_home }}
@@ -42,7 +42,7 @@
       delay: 5
       until: "'00:00:00' in replicat_lag.stdout"
 
-    - name: Stop Replicat on Target
+    - name: sw2 |Stop Replicat on Target
       shell: |
         . ~/.bash_profile      
         cd {{ ogg_home }}
@@ -56,28 +56,28 @@
 #      when: "'dc_db_1' in group_names"
       when: inventory_hostname == "dc_db_1"
       register: stop_replicat
+# Moved them to stage 3 for better control      
+#     - name: sw2 |Stop manager on Source Database
+#       shell: |
+#         . ~/.bash_profile
+#         cd {{ ogg_home }}
+#         ./ggsci <<EOF
+#         STOP mgr!
+#         EXIT
+#         EOF
+#       args:
+#         chdir: "{{ ogg_home }}"  
+# #      when: "'dc_db_1' in group_names"
+#       when: inventory_hostname == "dc_db_1"
+#       register: stop_mgr
       
-    - name: Stop manager on Source Database
-      shell: |
-        . ~/.bash_profile
-        cd {{ ogg_home }}
-        ./ggsci <<EOF
-        STOP mgr!
-        EXIT
-        EOF
-      args:
-        chdir: "{{ ogg_home }}"  
-#      when: "'dc_db_1' in group_names"
-      when: inventory_hostname == "dc_db_1"
-      register: stop_mgr
-      
-    - name: Perform switchover on primary
-      ansible.builtin.shell: |
-        . ~/.bash_profile
-        cd {{ oracle_home }}/.bash_profile && sqlplus -S / as sysdba <<EOF
-        ALTER DATABASE SWICHOVER TO RETUATDG;
-        EXIT;
-        EOF
-#      when: "'dc_db_1' in group_names"
-      when: inventory_hostname == "dc_db_1"
+#     - name: sw2 |Perform switchover on primary
+#       ansible.builtin.shell: |
+#         . ~/.bash_profile
+#         cd {{ oracle_home }}/.bash_profile && sqlplus -S / as sysdba <<EOF
+#         ALTER DATABASE SWICHOVER TO RETUATDG;
+#         EXIT;
+#         EOF
+# #      when: "'dc_db_1' in group_names"
+#       when: inventory_hostname == "dc_db_1"
           

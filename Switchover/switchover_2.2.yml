@@ -11,7 +11,7 @@
     extract_name: "ext_{{ inventory_hostname }}"
     replicat_name: "rep_{{ inventory_hostname }}"
   tasks:
-    - name: Stop Extract on Source Database
+    - name: sw2 |Stop Extract on Source Database
       shell: |
         . ~/.bash_profile
         cd {{ ogg_home }}
@@ -26,7 +26,7 @@
       register: stop_extract
       
       
-    - name: Wait for Replicat to catch up
+    - name: sw2| Wait for Replicat to catch up
       shell: |
         . ~/.bash_profile
         cd {{ ogg_home }}
@@ -42,7 +42,7 @@
       delay: 5
       until: "'00:00:00' in replicat_lag.stdout"
 
-    - name: Stop Replicat
+    - name: sw2 |Stop Replicat
       shell: |
         . ~/.bash_profile      
         cd {{ ogg_home }}

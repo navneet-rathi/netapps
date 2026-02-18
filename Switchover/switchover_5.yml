@@ -10,7 +10,7 @@
     - oracle_gp_vars.yml
   tasks:
      ### primary and openmode read write
-    - name: Verify Openmode and database_role #
+    - name: sw5 |Verify Openmode and database_role #
       ansible.builtin.shell: |
         . ~/.bash_profile
         cd {{ oracle_home }}/.bash_profile && sqlplus -S / as sysdba <<EOF
@@ -23,14 +23,14 @@
         -  "'READ WRITE' in Verify_Openmode.stdout" 
         -  "'PRIMARY' in Verify_Openmode.stdout"
        
-    - name: Open New Standby In Readonly Mode 
+    - name: sw5 |Open New Standby In Readonly Mode 
       ansible.builtin.shell: |
         . ~/.bash_profile &&
         srvctl start database -d RETUAT -o 'read only'
       # when: "'dc_db_1' in group_names"
       when: inventory_hostname == "dc_db_1"
       
-    - name:  Start MRP 
+    - name:  sw5 |Start MRP 
       ansible.builtin.shell: |
         . ~/.bash_profile
         cd {{ oracle_home }}/.bash_profile && sqlplus -S / as sysdba <<EOF

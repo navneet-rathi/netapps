@@ -9,7 +9,7 @@
   vars_files:
     - oracle_gp_vars.yml
   tasks:
-    - name: Open New primary in RW | Need to execute on ALL hosts in Standby
+    - name: sw4 |Open New primary in RW | Need to execute on ALL hosts in Standby
       ansible.builtin.shell: |
         . ~/.bash_profile
         cd {{ oracle_home }}/.bash_profile && sqlplus -S / as sysdba <<EOF
