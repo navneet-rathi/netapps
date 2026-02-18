@@ -29,72 +29,72 @@
 #      when: "'dc_db_1' in group_names"
       when: inventory_hostname == "dc_db_1"
       
-    - name: Stop Extract on Source Database
-      shell: |
-        . ~/.bash_profile
-        cd {{ ogg_home }}
-        ./ggsci <<EOF
-        STOP EXTRACT {{ extract_name }}
-        INFO EXTRACT {{ extract_name }}
-        EXIT
-        EOF
-      args:
-        chdir: "{{ ogg_home }}"  
-      when: inventory_hostname == "dc_db_1"
-      register: stop_extract
+#     - name: Stop Extract on Source Database
+#       shell: |
+#         . ~/.bash_profile
+#         cd {{ ogg_home }}
+#         ./ggsci <<EOF
+#         STOP EXTRACT {{ extract_name }}
+#         INFO EXTRACT {{ extract_name }}
+#         EXIT
+#         EOF
+#       args:
+#         chdir: "{{ ogg_home }}"  
+#       when: inventory_hostname == "dc_db_1"
+#       register: stop_extract
       
       
-    - name: Wait for Replicat to catch up on Target
-      shell: |
-        . ~/.bash_profile
-        cd {{ ogg_home }}
-        ./ggsci <<EOF
-        LAG REPLICAT {{ replicat_name }}
-        EXIT
-        EOF
-      args:
-        chdir: "{{ ogg_home }}"        
-      when: inventory_hostname == "dc_db_1"
-      register: replicat_lag
-      retries: 3
-      delay: 5
-      until: "'00:00:00' in replicat_lag.stdout"
+#     - name: Wait for Replicat to catch up on Target
+#       shell: |
+#         . ~/.bash_profile
+#         cd {{ ogg_home }}
+#         ./ggsci <<EOF
+#         LAG REPLICAT {{ replicat_name }}
+#         EXIT
+#         EOF
+#       args:
+#         chdir: "{{ ogg_home }}"        
+#       when: inventory_hostname == "dc_db_1"
+#       register: replicat_lag
+#       retries: 3
+#       delay: 5
+#       until: "'00:00:00' in replicat_lag.stdout"
 
-    - name: Stop Replicat on Target
-      shell: |
-        . ~/.bash_profile      
-        cd {{ ogg_home }}
-        ./ggsci <<EOF
-        STOP REPLICAT {{ replicat_name }}
-        INFO REPLICAT {{ replicat_name }}
-        EXIT
-        EOF
-      args:
-        chdir: "{{ ogg_home }}"        
-#      when: "'dc_db_1' in group_names"
-      when: inventory_hostname == "dc_db_1"
-      register: stop_replicat
+#     - name: Stop Replicat on Target
+#       shell: |
+#         . ~/.bash_profile      
+#         cd {{ ogg_home }}
+#         ./ggsci <<EOF
+#         STOP REPLICAT {{ replicat_name }}
+#         INFO REPLICAT {{ replicat_name }}
+#         EXIT
+#         EOF
+#       args:
+#         chdir: "{{ ogg_home }}"        
+# #      when: "'dc_db_1' in group_names"
+#       when: inventory_hostname == "dc_db_1"
+#       register: stop_replicat
       
-    - name: Stop manager on Source Database
-      shell: |
-        . ~/.bash_profile
-        cd {{ ogg_home }}
-        ./ggsci <<EOF
-        STOP mgr!
-        EXIT
-        EOF
-      args:
-        chdir: "{{ ogg_home }}"  
-#      when: "'dc_db_1' in group_names"
-      when: inventory_hostname == "dc_db_1"
-      register: stop_mgr
+#     - name: Stop manager on Source Database
+#       shell: |
+#         . ~/.bash_profile
+#         cd {{ ogg_home }}
+#         ./ggsci <<EOF
+#         STOP mgr!
+#         EXIT
+#         EOF
+#       args:
+#         chdir: "{{ ogg_home }}"  
+# #      when: "'dc_db_1' in group_names"
+#       when: inventory_hostname == "dc_db_1"
+#       register: stop_mgr
       
-    - name: Perform switchover on primary
-      ansible.builtin.shell: |
-        . ~/.bash_profile
-        cd {{ oracle_home }}/.bash_profile && sqlplus -S / as sysdba <<EOF
-        ALTER DATABASE SWICHOVER TO RETUATDG;
-        EXIT;
-        EOF
-#      when: "'dc_db_1' in group_names"
-      when: inventory_hostname == "dc_db_1"
+#     - name: Perform switchover on primary
+#       ansible.builtin.shell: |
+#         . ~/.bash_profile
+#         cd {{ oracle_home }}/.bash_profile && sqlplus -S / as sysdba <<EOF
+#         ALTER DATABASE SWICHOVER TO RETUATDG;
+#         EXIT;
+#         EOF
+# #      when: "'dc_db_1' in group_names"
+#       when: inventory_hostname == "dc_db_1"

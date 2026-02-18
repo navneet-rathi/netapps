@@ -1,0 +1,19 @@
+---
+- name: Oracle database and GoldenGate Switchover on Solaris
+  hosts: dr_web:dc_web
+  become: yes
+  become_user: "{{ oracle_user }}"
+  gather_facts: no
+  environment: "{{ ogg_env }}"
+  serial: 1
+  vars_files:
+    - oracle_gp_vars.yml
+  tasks:
+    - name: Open New primary in RW | Need to execute on ALL hosts in Standby
+      ansible.builtin.shell: |
+        . ~/.bash_profile
+        cd {{ oracle_home }}/.bash_profile && sqlplus -S / as sysdba <<EOF
+        ALTER DATABASE OPEN;
+        EXIT;
+        EOF
+      when: "'dr_db' in group_names"
