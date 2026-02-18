@@ -16,4 +16,6 @@
         ALTER DATABASE OPEN;
         EXIT;
         EOF
+      args:  
+          executable: /bin/bash  
       when: "'dr_db' in group_names"

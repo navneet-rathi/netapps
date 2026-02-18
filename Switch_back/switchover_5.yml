@@ -17,6 +17,8 @@
         SELECT NAME,Instance_Name,DATABASE_ROLE,OPEN_MODE FROM v$Database,V$Instance;
         EXIT;
         EOF
+      args:  
+          executable: /bin/bash
       register: Verify_Openmode  
       when: 
         -  inventory_hostname == "dc_db_1" or inventory_hostname == "dc_db_2"
@@ -29,7 +31,9 @@
         srvctl start database -d RETUAT -o 'read only'
       # when: "'dc_db_1' in group_names"
       when: inventory_hostname == "dr_db_1"
-      
+      args:  
+          executable: /bin/bash
+
     - name:  sw5 |Start MRP 
       ansible.builtin.shell: |
         . ~/.bash_profile
@@ -39,3 +43,5 @@
         EOF
       #      when: "'dc_db_1' in group_names"
       when: inventory_hostname == "dr_db_1"
+      args:  
+          executable: /bin/bash

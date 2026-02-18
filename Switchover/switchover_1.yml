@@ -17,6 +17,8 @@
         ALTER DATABASE SWICHOVER TO RETUATDG Verify;
         EXIT;
         EOF
+      args:  
+        executable: /bin/bash  
 #      when: "'dc_db_1' in group_names"
       when: inventory_hostname == "dc_db_1"
       
@@ -26,6 +28,8 @@
         ALTER SYSTEM SET JOB_QUEUE_PROCESSES=0 SID='*';
         EXIT;
         EOF
+      args:  
+        executable: /bin/bash        
 #      when: "'dc_db_1' in group_names"
       when: inventory_hostname == "dc_db_1"
       

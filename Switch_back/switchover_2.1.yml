@@ -21,7 +21,8 @@
         EXIT
         EOF
       args:
-        chdir: "{{ ogg_home }}"  
+        chdir: "{{ ogg_home }}"
+        executable: /bin/bash  
       when: inventory_hostname == "dc_db_1"
       register: stop_extract
       
@@ -35,7 +36,8 @@
         EXIT
         EOF
       args:
-        chdir: "{{ ogg_home }}"        
+        chdir: "{{ ogg_home }}"
+        executable: /bin/bash        
       when: inventory_hostname == "dc_db_1"
       register: replicat_lag
       retries: 3
@@ -52,7 +54,8 @@
         EXIT
         EOF
       args:
-        chdir: "{{ ogg_home }}"        
+        chdir: "{{ ogg_home }}"
+        executable: /bin/bash        
 #      when: "'dc_db_1' in group_names"
       when: inventory_hostname == "dc_db_1"
       register: stop_replicat

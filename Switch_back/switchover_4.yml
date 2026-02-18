@@ -16,4 +16,6 @@
         ALTER DATABASE OPEN;
         EXIT;
         EOF
+      args:  
+          executable: /bin/bash  
       when: "'dc_db' in group_names"
