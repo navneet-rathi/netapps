@@ -1,0 +1,41 @@
+---
+- name: Oracle database and GoldenGate Switchover on Solaris
+  hosts: dr_web:dc_web
+  become: yes
+  become_user: "{{ oracle_user }}"
+  gather_facts: no
+  environment: "{{ ogg_env }}"
+  serial: 1
+  vars_files:
+    - oracle_gp_vars.yml
+  tasks:
+     ### primary and openmode read write
+    - name: sw5 |Verify Openmode and database_role #
+      ansible.builtin.shell: |
+        . ~/.bash_profile
+        cd {{ oracle_home }}/.bash_profile && sqlplus -S / as sysdba <<EOF
+        SELECT NAME,Instance_Name,DATABASE_ROLE,OPEN_MODE FROM v$Database,V$Instance;
+        EXIT;
+        EOF
+      register: Verify_Openmode  
+      when: 
+        -  inventory_hostname == "dc_db_1" or inventory_hostname == "dc_db_2"
+        -  "'READ WRITE' in Verify_Openmode.stdout" 
+        -  "'PRIMARY' in Verify_Openmode.stdout"
+       
+    - name: sw5 |Open New Standby In Readonly Mode 
+      ansible.builtin.shell: |
+        . ~/.bash_profile &&
+        srvctl start database -d RETUAT -o 'read only'
+      # when: "'dc_db_1' in group_names"
+      when: inventory_hostname == "dr_db_1"
+      
+    - name:  sw5 |Start MRP 
+      ansible.builtin.shell: |
+        . ~/.bash_profile
+        cd {{ oracle_home }}/.bash_profile && sqlplus -S / as sysdba <<EOF
+        ALTER DATABASE RECOVER MANAGED STANDBY DATABASE DISCONNECT FROM SESSION;
+        EXIT;
+        EOF
+      #      when: "'dc_db_1' in group_names"
+      when: inventory_hostname == "dr_db_1"
