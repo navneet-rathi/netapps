@@ -9,5 +9,4 @@
     - oracle_gp_vars.yml
   vars:
     extract_name: "ext_{{ inventory_hostname }}"
-    replicat_name: "rep_{{ inventory_hostname }}"       
-  tasks:
+    replicat_name: "rep_{{ inventory_hostname }}"
