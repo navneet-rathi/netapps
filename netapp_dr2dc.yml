@@ -25,8 +25,8 @@
       register: snapmirror_show
       failed_when: false
       loop: 
-        - snapmirror show -destination-path Application_UAT:Mirror_ScriptTest_vol1  -fields state,status
-        - snapmirror show -destination-path Application_UAT:Mirror_ScriptTest_vol2  -fields state,status
+        - snapmirror show -destination-path Application_UAT:Mirror_ScriptTest_vol1 -fields state,status
+        - snapmirror show -destination-path Application_UAT:Mirror_ScriptTest_vol2 -fields state,status
     
     # - name: Validate SnapMirror relationship exists
     #   netapp.ontap.na_ontap_ssh_command:
