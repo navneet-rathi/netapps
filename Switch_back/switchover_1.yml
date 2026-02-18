@@ -18,7 +18,7 @@
         EXIT;
         EOF
       args:  
-          executable: /bin/bash 
+        executable: /bin/bash 
     # when: "'dc_db_1' in group_names"
       when: inventory_hostname == "dr_db_1"
       
@@ -29,7 +29,7 @@
         EXIT;
         EOF
       args:  
-          executable: /bin/bash 
+        executable: /bin/bash 
           #      when: "'dc_db_1' in group_names"
       when: inventory_hostname == "dr_db_1"
       
