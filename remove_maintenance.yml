@@ -6,7 +6,7 @@
   become_method: sudo
   vars:
     fpath: /doc-root/maintenance_planned.html
-    ihs_home: /ISH9/IBM/HTTPServer
+    ihs_home: /IHS9/IBM/HTTPServer
     ihs_bin: "{{ ihs_home }}/bin/apachectl"
     ihs_conf: "{{ ihs_home }}/conf/maintenanceA.conf"
     #ihs_config_file:
