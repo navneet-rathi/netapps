@@ -42,7 +42,14 @@
         "{{ ihs_bin }}" -f "{{ ihs_conf }}" -k stop
       register: httpdstatus
       become_user: wasadmin
-
+      
+    - name stopping the retail uat
+      ansible.builtin.shell: >
+        "{{ ihs_bin }}" -f "{{ item }}" -k stop
+       loop: 
+         - retail.conf
+         - uatretail.conf
+         
     - name: validate the status| validate the status of the apache
       ansible.builtin.debug:
         msg: "{{ httpdstatus }}"
