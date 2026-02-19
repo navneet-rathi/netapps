@@ -4,5 +4,5 @@ ogg_env:
   ORACLE_HOME: /u01/app/oracle/product/19c/dbhome_1
   ORACLE_SID: ORCL
   PATH: "/u01/app/ogg:/usr/bin:/usr/sbin"
-extract_name: EXT1
-replicat_name: REP1
+# extract_name: EXT1
+# replicat_name: REP1
