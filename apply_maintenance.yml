@@ -44,18 +44,19 @@
     - name: stopping the retail uat
       ansible.builtin.shell: >
         "{{ ihs_bin }}" -f "{{ihs_home}}/conf/{{ item }}" -k stop
-       loop: 
-         - retail.conf
-         - uatretail.conf
+      loop: 
+        - retail.conf
+        - uatretail.conf
       when: inventory_hostname == "dc_web_1"
       
     - name: stopping the retail pre prod
       ansible.builtin.shell: >
         "{{ ihs_bin }}" -f "{{ihs_home}}/conf/{{ item }}" -k stop
-       loop: 
-         - retail_preprod.conf
-#         - uatretail.conf
-      when: inventory_hostname == "dr_web_1"      
+      loop: 
+        - retail_preprod.conf
+#       - uatretail.conf
+      when: inventory_hostname == "dr_web_1" 
+      
     - name: Start maintanance| Starting the maintanance
       ansible.builtin.command: >
         "{{ ihs_bin }}" -f "{{ ihs_conf }}" -k start
