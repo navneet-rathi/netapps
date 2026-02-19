@@ -9,6 +9,10 @@
     ihs_home: /IHS9/IBM/HTTPServer
     ihs_bin: "{{ ihs_home }}/bin/apachectl"
     ihs_conf: "{{ ihs_home }}/conf/MaintenanceA.conf"
+    ihs_conf_stop:
+      - retail.conf
+      - uatretail.conf
+      
     #ihs_config_file:
   tasks:
     - name: Maintanance Page| Apply maitanance page for the activity
@@ -37,6 +41,13 @@
         msg: "Required configuration file is missing: {{ ihs_bin }}"
       when: not bin_exists.stat.exists
 
+    - name stopping the retail uat
+      ansible.builtin.shell: >
+        "{{ ihs_bin }}" -f "{{ item }}" -k stop
+       loop: 
+         - retail.conf
+         - uatretail.conf
+         
     - name: Start maintanance| Starting the maintanance
       ansible.builtin.command: >
         "{{ ihs_bin }}" -f "{{ ihs_conf }}" -k start
