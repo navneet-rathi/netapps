@@ -14,8 +14,8 @@
     - name: Maintanance Page| Apply maitanance page for the activity
       ansible.builtin.file:
         path: "{{ fpath }}"
-        owner: root
-        group: root
+        owner: wasadmin
+        group: was
         mode: '0000'
       register: fpath_status
 
