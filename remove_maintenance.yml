@@ -8,7 +8,7 @@
     fpath: /doc-root/maintenance_planned.html
     ihs_home: /IHS9/IBM/HTTPServer
     ihs_bin: "{{ ihs_home }}/bin/apachectl"
-    ihs_conf: "{{ ihs_home }}/conf/maintenanceA.conf"
+    ihs_conf: "{{ ihs_home }}/conf/MaintenanceA.conf"
     #ihs_config_file:
   tasks:
     - name: Maintanance Page| Apply maitanance page for the activity
