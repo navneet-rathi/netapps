@@ -9,6 +9,8 @@
   vars_files:
     - oracle_gp_vars.yml
   tasks:
+
+  
     - name: sw4 |Open New primary in RW | Need to execute on ALL hosts in Standby
       ansible.builtin.shell: |
         . ~/.bash_profile
@@ -19,3 +21,5 @@
       args:  
         executable: /bin/bash  
       when: "'dc_db' in group_names"
+
+

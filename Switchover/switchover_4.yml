@@ -19,3 +19,14 @@
       args:  
         executable: /bin/bash  
       when: "'dr_db' in group_names"
+
+    - name: sw1 | Job Queue process to 0 | No more schedular jobs will RUN on DB
+      ansible.builtin.shell: |
+        . ~/.bash_profile && sqlplus -S / as sysdba <<EOF
+        ALTER SYSTEM SET JOB_QUEUE_PROCESSES=100 SID='*';
+        EXIT;
+        EOF
+      args:  
+        executable: /bin/bash 
+          #      when: "'dc_db_1' in group_names"
+      when: inventory_hostname == "dr_db_1"
