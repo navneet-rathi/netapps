@@ -43,12 +43,21 @@
       register: httpdstatus
       become_user: wasadmin
       
-    - name stopping the retail uat
+    - name: Start the retail uat
       ansible.builtin.shell: >
-        "{{ ihs_bin }}" -f "{{ item }}" -k stop
-       loop: 
-         - retail.conf
-         - uatretail.conf
+        "{{ ihs_bin }}" -f "{{ihs_home}}/conf/{{ item }}" -k start
+      loop: 
+        - retail.conf
+        - uatretail.conf
+      when: inventory_hostname == "dc_web_1"
+      
+    - name: Start the retail pre prod
+      ansible.builtin.shell: >
+        "{{ ihs_bin }}" -f "{{ihs_home}}/conf/{{ item }}" -k start
+      loop: 
+        - retail_preprod.conf
+#       - uatretail.conf
+      when: inventory_hostname == "dr_web_1" 
          
     - name: validate the status| validate the status of the apache
       ansible.builtin.debug:
